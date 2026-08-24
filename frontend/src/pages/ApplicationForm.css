@@ -1,0 +1,273 @@
+.application-page {
+  min-height: 100vh;
+  background: #f7f9fc;
+  color: #101828;
+}
+
+.application-navbar {
+  height: 78px;
+  padding: 0 7%;
+  background: white;
+  border-bottom: 1px solid #eaecf0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.application-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.application-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #eaf6fb;
+  color: #0877ae;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+.application-brand strong,
+.application-brand span {
+  display: block;
+}
+
+.application-brand strong {
+  font-size: 16px;
+}
+
+.application-brand span {
+  color: #0877ae;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.application-navbar nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.application-navbar nav a {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475467;
+  cursor: pointer;
+}
+
+.application-container {
+  width: min(900px, 90%);
+  margin: 45px auto;
+}
+
+.application-back {
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #667085;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+
+.application-card {
+  background: white;
+  border: 1px solid #eaecf0;
+  border-radius: 24px;
+  padding: 45px;
+  box-shadow: 0 15px 40px rgba(16, 24, 40, 0.05);
+}
+
+.application-heading {
+  padding-bottom: 30px;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.application-heading p {
+  color: #0877ae;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin: 0 0 10px;
+}
+
+.application-heading h1 {
+  margin: 0 0 10px;
+  font-size: 34px;
+  letter-spacing: -1px;
+}
+
+.application-heading span {
+  color: #667085;
+  font-size: 14px;
+}
+
+.candidate-info {
+  margin: 30px 0;
+  padding: 18px;
+  border-radius: 12px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.candidate-info > strong {
+  font-size: 12px;
+  color: #667085;
+}
+
+.candidate-info div {
+  text-align: right;
+}
+
+.candidate-info span,
+.candidate-info small {
+  display: block;
+}
+
+.candidate-info span {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.candidate-info small {
+  margin-top: 3px;
+  color: #667085;
+}
+
+.application-field {
+  margin-bottom: 25px;
+}
+
+.application-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #344054;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.application-field input[type="tel"],
+.application-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  padding: 14px;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: #101828;
+}
+
+.application-field input[type="tel"] {
+  height: 50px;
+}
+
+.application-field textarea {
+  resize: vertical;
+}
+
+.application-field input:focus,
+.application-field textarea:focus {
+  border-color: #0877ae;
+  box-shadow: 0 0 0 3px rgba(8, 119, 174, 0.08);
+}
+
+.resume-upload {
+  position: relative;
+  min-height: 90px;
+  border: 1.5px dashed #b8c2cc;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 20px;
+  color: #0877ae;
+  cursor: pointer;
+  background: #fbfdff;
+}
+
+.resume-upload:hover {
+  border-color: #0877ae;
+}
+
+.resume-upload div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.resume-upload strong {
+  color: #344054;
+  font-size: 13px;
+}
+
+.resume-upload span {
+  color: #98a2b3;
+  font-size: 12px;
+}
+
+.resume-upload input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.submit-application {
+  width: 100%;
+  height: 54px;
+  border: none;
+  border-radius: 10px;
+  background: #0877ae;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.submit-application:hover {
+  background: #06658f;
+}
+
+@media (max-width: 700px) {
+  .application-navbar {
+    padding: 0 20px;
+  }
+
+  .application-navbar nav {
+    display: none;
+  }
+
+  .application-card {
+    padding: 25px;
+  }
+
+  .candidate-info {
+    display: block;
+  }
+
+  .candidate-info div {
+    text-align: left;
+    margin-top: 8px;
+  }
+}

@@ -1,0 +1,259 @@
+.register-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #f8fafc;
+  color: #101828;
+}
+
+/* LEFT */
+
+.register-left {
+  position: relative;
+  overflow: hidden;
+  padding: 45px 8%;
+  background: #0d1b2a;
+  color: white;
+}
+
+.register-left::after {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  right: -250px;
+  bottom: -180px;
+}
+
+.register-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.register-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: #0877ae;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+.register-brand strong,
+.register-brand span {
+  display: block;
+}
+
+.register-brand strong {
+  font-size: 17px;
+}
+
+.register-brand span {
+  color: #4db8e8;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.register-hero {
+  max-width: 520px;
+  margin-top: 150px;
+}
+
+.register-eyebrow {
+  color: #4db8e8;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.register-hero h1 {
+  margin: 20px 0;
+  font-size: clamp(45px, 5vw, 72px);
+  line-height: 0.98;
+  letter-spacing: -3px;
+}
+
+.register-hero h1 span {
+  color: #4db8e8;
+}
+
+.register-hero > p:last-child {
+  max-width: 450px;
+  color: #aeb9c5;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* RIGHT */
+
+.register-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
+.register-card {
+  width: min(460px, 100%);
+}
+
+.register-heading {
+  margin-bottom: 30px;
+}
+
+.register-label {
+  margin: 0 0 10px;
+  color: #0877ae;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.register-heading h2 {
+  margin: 0 0 10px;
+  font-size: 34px;
+  letter-spacing: -1px;
+}
+
+.register-heading > p:last-child {
+  margin: 0;
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.register-error,
+.register-success {
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.register-error {
+  background: #fff1f1;
+  border: 1px solid #ffd3d3;
+  color: #b42318;
+}
+
+.register-success {
+  background: #ecfdf3;
+  border: 1px solid #abefc6;
+  color: #067647;
+}
+
+.register-field {
+  margin-bottom: 19px;
+}
+
+.register-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #344054;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.register-input {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  background: white;
+  border: 1px solid #dfe4ea;
+  border-radius: 10px;
+  color: #98a2b3;
+  transition: 0.2s ease;
+}
+
+.register-input:focus-within {
+  border-color: #0877ae;
+  box-shadow: 0 0 0 3px rgba(8, 119, 174, 0.08);
+}
+
+.register-input input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #101828;
+  font-size: 14px;
+}
+
+.register-input input::placeholder {
+  color: #98a2b3;
+}
+
+.password-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #98a2b3;
+  cursor: pointer;
+}
+
+.register-button {
+  width: 100%;
+  height: 52px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 10px;
+  background: #0877ae;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.register-button:hover {
+  background: #06658f;
+}
+
+.register-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.register-login {
+  margin-top: 25px;
+  text-align: center;
+  color: #667085;
+  font-size: 13px;
+}
+
+.register-login a {
+  margin-left: 5px;
+  color: #0877ae;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.register-login a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 850px) {
+  .register-page {
+    grid-template-columns: 1fr;
+  }
+
+  .register-left {
+    display: none;
+  }
+
+  .register-right {
+    min-height: 100vh;
+    padding: 30px;
+  }
+}
