@@ -1,98 +1,76 @@
 const express = require("express");
-const multer = require("multer");
-const path = require("path");
-
-const {
-  protect,
-  adminOnly,
-  applicantOnly,
-} = require("../middleware/authMiddleware");
 
 const {
   createApplication,
   getMyApplications,
   getAllApplications,
+  updateApplicationStatus,
 } = require("../controllers/applicationController");
+
+const {
+  protect,
+  adminOnly,
+  recruiterOnly,
+} = require("../middleware/authMiddleware");
+
+const upload = require("../middleware/upload");
 
 const router = express.Router();
 
-// ======================================
-// RESUME UPLOAD CONFIGURATION
-// ======================================
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-
-  filename: (req, file, cb) => {
-    const uniqueName =
-      Date.now() +
-      "-" +
-      Math.round(Math.random() * 1e9) +
-      path.extname(file.originalname);
-
-    cb(null, uniqueName);
-  },
-});
-
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = [".pdf", ".doc", ".docx"];
-
-  const extension = path
-    .extname(file.originalname)
-    .toLowerCase();
-
-  if (allowedTypes.includes(extension)) {
-    cb(null, true);
-  } else {
-    cb(
-      new Error(
-        "Only PDF, DOC and DOCX files are allowed."
-      )
-    );
-  }
-};
-
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024,
-  },
-});
-
-// ======================================
-// APPLICANT ROUTES
-// ======================================
+// ==========================================
+// CANDIDATE
+// ==========================================
 
 // Submit application
 router.post(
   "/",
   protect,
-  applicantOnly,
   upload.single("resume"),
   createApplication
 );
 
-// Get logged-in candidate's applications
+// Candidate's applications
 router.get(
   "/my",
   protect,
-  applicantOnly,
   getMyApplications
 );
 
-// ======================================
-// ADMIN ROUTES
-// ======================================
+// ==========================================
+// ADMIN
+// ==========================================
 
-// Get all applications
+// Admin - all applications
 router.get(
   "/",
   protect,
   adminOnly,
   getAllApplications
+);
+
+// ==========================================
+// ADMIN + RECRUITER
+// ==========================================
+
+// Admin and recruiter - update status
+router.put(
+  "/:id/status",
+  protect,
+  (req, res, next) => {
+    if (
+      req.user.role !== "admin" &&
+      req.user.role !== "recruiter"
+    ) {
+      return res.status(403).json({
+        success: false,
+        message:
+          "Admin or recruiter access required.",
+      });
+    }
+
+    next();
+  },
+  updateApplicationStatus
 );
 
 module.exports = router;

@@ -1,70 +1,255 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
 import AdminDashboard from "./pages/AdminDashboard";
+import Applications from "./pages/Applications";
+import Candidates from "./pages/Candidates";
+
+import RecruiterDashboard from "./pages/RecruiterDashboard";
+
 import Jobs from "./pages/Jobs";
 import JobDetails from "./pages/JobDetails";
 import ApplicationForm from "./pages/ApplicationForm";
-import Applications from "./pages/Applications";
+import MyApplications from "./pages/MyApplications";
+import Profile from "./pages/Profile";
+
+// ==========================================
+// GET LOGGED-IN USER
+// ==========================================
+
+function getUser() {
+  try {
+    const user = localStorage.getItem("user");
+
+    if (!user) {
+      return null;
+    }
+
+    return JSON.parse(user);
+  } catch (error) {
+    console.error(
+      "Error reading logged-in user:",
+      error
+    );
+
+    return null;
+  }
+}
+
+// ==========================================
+// PROTECTED ROUTE
+// ==========================================
+
+function ProtectedRoute({
+  children,
+  role,
+}) {
+  const token = localStorage.getItem("token");
+  const user = getUser();
+
+  // Not logged in
+  if (!token || !user) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+  }
+
+  // Wrong role
+  if (role && user.role !== role) {
+    if (user.role === "admin") {
+      return (
+        <Navigate
+          to="/jobs/admin"
+          replace
+        />
+      );
+    }
+
+    if (user.role === "recruiter") {
+      return (
+        <Navigate
+          to="/recruiter"
+          replace
+        />
+      );
+    }
+
+    if (user.role === "applicant") {
+      return (
+        <Navigate
+          to="/jobs"
+          replace
+        />
+      );
+    }
+
+    // Unknown role
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+  }
+
+  return children;
+}
+
+// ==========================================
+// APP
+// ==========================================
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* Login */}
+        {/* ==================================
+            PUBLIC
+        ================================== */}
+
         <Route
           path="/login"
           element={<Login />}
         />
 
-        {/* Register */}
         <Route
           path="/register"
           element={<Register />}
         />
 
-        {/* Default page */}
+        {/* ==================================
+            DEFAULT
+        ================================== */}
+
         <Route
           path="/"
-          element={<Navigate to="/login" replace />}
+          element={
+            <Navigate
+              to="/login"
+              replace
+            />
+          }
         />
 
-        {/* Admin Dashboard */}
+        {/* ==================================
+            ADMIN
+        ================================== */}
+
         <Route
           path="/jobs/admin"
-          element={<AdminDashboard />}
+          element={
+            <ProtectedRoute role="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
         />
 
-        {/* Admin Applications */}
         <Route
           path="/jobs/admin/applications"
-          element={<Applications />}
+          element={
+            <ProtectedRoute role="admin">
+              <Applications />
+            </ProtectedRoute>
+          }
         />
 
-        {/* Candidate Jobs */}
+        <Route
+          path="/jobs/admin/candidates"
+          element={
+            <ProtectedRoute role="admin">
+              <Candidates />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ==================================
+            RECRUITER
+        ================================== */}
+
+        <Route
+          path="/recruiter"
+          element={
+            <ProtectedRoute role="recruiter">
+              <RecruiterDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ==================================
+            APPLICANT
+        ================================== */}
+
         <Route
           path="/jobs"
-          element={<Jobs />}
+          element={
+            <ProtectedRoute role="applicant">
+              <Jobs />
+            </ProtectedRoute>
+          }
         />
 
-        {/* Job Details */}
         <Route
           path="/jobs/:id"
-          element={<JobDetails />}
+          element={
+            <ProtectedRoute role="applicant">
+              <JobDetails />
+            </ProtectedRoute>
+          }
         />
 
-        {/* Application Form */}
         <Route
           path="/jobs/:id/apply"
-          element={<ApplicationForm />}
+          element={
+            <ProtectedRoute role="applicant">
+              <ApplicationForm />
+            </ProtectedRoute>
+          }
         />
 
-        {/* Unknown routes */}
+        <Route
+          path="/applications"
+          element={
+            <ProtectedRoute role="applicant">
+              <MyApplications />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute role="applicant">
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ==================================
+            UNKNOWN ROUTE
+        ================================== */}
+
         <Route
           path="*"
-          element={<Navigate to="/login" replace />}
+          element={
+            <Navigate
+              to="/login"
+              replace
+            />
+          }
         />
 
       </Routes>

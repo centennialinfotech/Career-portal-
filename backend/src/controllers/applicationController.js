@@ -1,7 +1,10 @@
 const Application = require("../models/Application");
 const Job = require("../models/Job");
 
-// Create a new application
+// ==========================================
+// CREATE APPLICATION
+// ==========================================
+
 const createApplication = async (req, res) => {
   try {
     const { jobId, phone, coverLetter } = req.body;
@@ -38,7 +41,6 @@ const createApplication = async (req, res) => {
       });
     }
 
-    // Prevent the same applicant from applying twice
     const existingApplication =
       await Application.findOne({
         applicant: req.user._id,
@@ -76,7 +78,10 @@ const createApplication = async (req, res) => {
       application: populatedApplication,
     });
   } catch (error) {
-    console.error("Create application error:", error);
+    console.error(
+      "Create application error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -85,7 +90,10 @@ const createApplication = async (req, res) => {
   }
 };
 
-// Get applications belonging to logged-in candidate
+// ==========================================
+// GET MY APPLICATIONS
+// ==========================================
+
 const getMyApplications = async (req, res) => {
   try {
     const applications = await Application.find({
@@ -102,7 +110,10 @@ const getMyApplications = async (req, res) => {
       applications,
     });
   } catch (error) {
-    console.error("Get my applications error:", error);
+    console.error(
+      "Get my applications error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -111,7 +122,10 @@ const getMyApplications = async (req, res) => {
   }
 };
 
-// Get all applications for admin
+// ==========================================
+// GET ALL APPLICATIONS - ADMIN
+// ==========================================
+
 const getAllApplications = async (req, res) => {
   try {
     const applications = await Application.find()
@@ -139,8 +153,91 @@ const getAllApplications = async (req, res) => {
   }
 };
 
+// ==========================================
+// UPDATE APPLICATION STATUS - ADMIN
+// ==========================================
+
+const updateApplicationStatus = async (
+  req,
+  res
+) => {
+  try {
+    const { status } = req.body;
+
+    const allowedStatuses = [
+      "Applied",
+      "Under Review",
+      "Shortlisted",
+      "Interview",
+      "Rejected",
+      "Selected",
+    ];
+
+    if (!status) {
+      return res.status(400).json({
+        success: false,
+        message: "Status is required.",
+      });
+    }
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid application status.",
+      });
+    }
+
+    const application =
+      await Application.findById(
+        req.params.id
+      );
+
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        message: "Application not found.",
+      });
+    }
+
+    application.status = status;
+
+    await application.save();
+
+    const updatedApplication =
+      await Application.findById(
+        application._id
+      )
+        .populate(
+          "applicant",
+          "name email"
+        )
+        .populate(
+          "job",
+          "title company location jobType"
+        );
+
+    return res.json({
+      success: true,
+      message:
+        "Application status updated successfully.",
+      application: updatedApplication,
+    });
+  } catch (error) {
+    console.error(
+      "Update application status error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error.",
+    });
+  }
+};
+
 module.exports = {
   createApplication,
   getMyApplications,
   getAllApplications,
+  updateApplicationStatus,
 };

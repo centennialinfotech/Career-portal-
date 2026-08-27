@@ -6,6 +6,9 @@ require("dotenv").config();
 const authRoutes = require("./src/routes/authRoutes");
 const jobRoutes = require("./src/routes/jobRoutes");
 const applicationRoutes = require("./src/routes/applicationRoutes");
+const profileRoutes = require("./src/routes/profileRoutes");
+const candidateRoutes = require("./src/routes/candidateRoutes");
+const recruiterRoutes = require("./src/routes/recruiterRoutes");
 
 const app = express();
 
@@ -17,6 +20,11 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/profile", profileRoutes);
+app.use(
+  "/api/candidates",
+  candidateRoutes
+);
 
 // Serve uploaded resumes
 app.use(
@@ -35,6 +43,11 @@ app.use("/api/jobs", jobRoutes);
 app.use(
   "/api/applications",
   applicationRoutes
+);
+
+app.use(
+  "/api/recruiter",
+  recruiterRoutes
 );
 
 // ===============================

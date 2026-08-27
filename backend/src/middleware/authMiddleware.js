@@ -41,6 +41,10 @@ const protect = async (req, res, next) => {
   }
 };
 
+// ==========================================
+// ADMIN ONLY
+// ==========================================
+
 const adminOnly = (req, res, next) => {
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({
@@ -52,8 +56,33 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
+// ==========================================
+// RECRUITER ONLY
+// ==========================================
+
+const recruiterOnly = (req, res, next) => {
+  if (
+    !req.user ||
+    req.user.role !== "recruiter"
+  ) {
+    return res.status(403).json({
+      success: false,
+      message: "Recruiter access required.",
+    });
+  }
+
+  next();
+};
+
+// ==========================================
+// APPLICANT ONLY
+// ==========================================
+
 const applicantOnly = (req, res, next) => {
-  if (!req.user || req.user.role !== "applicant") {
+  if (
+    !req.user ||
+    req.user.role !== "applicant"
+  ) {
     return res.status(403).json({
       success: false,
       message: "Applicant access required.",
@@ -66,5 +95,6 @@ const applicantOnly = (req, res, next) => {
 module.exports = {
   protect,
   adminOnly,
+  recruiterOnly,
   applicantOnly,
 };

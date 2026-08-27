@@ -26,6 +26,30 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "recruiter", "applicant"],
       default: "applicant",
     },
+
+    // Profile information
+    phone: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    skills: {
+      type: [String],
+      default: [],
+    },
+
+    education: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    experience: {
+      type: String,
+      trim: true,
+      default: "",
+    },
   },
   {
     timestamps: true,

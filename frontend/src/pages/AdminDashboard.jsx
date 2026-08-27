@@ -22,7 +22,12 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   // Application count
-  const [applicationCount, setApplicationCount] = useState(0);
+  const [applicationCount, setApplicationCount] =
+    useState(0);
+
+  // Candidate count
+  const [candidateCount, setCandidateCount] =
+    useState(0);
 
   const [form, setForm] = useState({
     title: "",
@@ -62,7 +67,8 @@ function AdminDashboard() {
           setJobs(data.jobs || []);
         } else {
           console.error(
-            data.message || "Failed to fetch jobs"
+            data.message ||
+              "Failed to fetch jobs"
           );
         }
       } catch (error) {
@@ -83,42 +89,95 @@ function AdminDashboard() {
   // ==========================================
 
   useEffect(() => {
-    const fetchApplicationCount = async () => {
-      try {
-        if (!token) {
-          return;
-        }
-
-        const response = await fetch(
-          `${API_URL}/api/applications`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+    const fetchApplicationCount =
+      async () => {
+        try {
+          if (!token) {
+            return;
           }
-        );
 
-        const data = await response.json();
-
-        if (response.ok && data.success) {
-          setApplicationCount(
-            data.applications?.length || 0
+          const response = await fetch(
+            `${API_URL}/api/applications`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
-        } else {
+
+          const data =
+            await response.json();
+
+          if (
+            response.ok &&
+            data.success
+          ) {
+            setApplicationCount(
+              data.applications?.length || 0
+            );
+          } else {
+            console.error(
+              data.message ||
+                "Failed to fetch applications"
+            );
+          }
+        } catch (error) {
           console.error(
-            data.message ||
-              "Failed to fetch applications"
+            "Failed to fetch applications:",
+            error
           );
         }
-      } catch (error) {
-        console.error(
-          "Failed to fetch applications:",
-          error
-        );
-      }
-    };
+      };
 
     fetchApplicationCount();
+  }, [token]);
+
+  // ==========================================
+  // GET CANDIDATE COUNT
+  // ==========================================
+
+  useEffect(() => {
+    const fetchCandidateCount =
+      async () => {
+        try {
+          if (!token) {
+            return;
+          }
+
+          const response = await fetch(
+            `${API_URL}/api/candidates`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const data =
+            await response.json();
+
+          if (
+            response.ok &&
+            data.success
+          ) {
+            setCandidateCount(
+              data.candidates?.length || 0
+            );
+          } else {
+            console.error(
+              data.message ||
+                "Failed to fetch candidates"
+            );
+          }
+        } catch (error) {
+          console.error(
+            "Failed to fetch candidates:",
+            error
+          );
+        }
+      };
+
+    fetchCandidateCount();
   }, [token]);
 
   // ==========================================
@@ -201,33 +260,47 @@ function AdminDashboard() {
     setForm({
       title: job.title || "",
       company:
-        job.company || "Centennial Infotech",
-      description: job.description || "",
+        job.company ||
+        "Centennial Infotech",
+      description:
+        job.description || "",
       location: job.location || "",
-      jobType: job.jobType || "Full Time",
+      jobType:
+        job.jobType || "Full Time",
       category: job.category || "",
-      experience: job.experience || "",
-      salaryMin: job.salaryMin ?? "",
-      salaryMax: job.salaryMax ?? "",
-      openings: job.openings || 1,
+      experience:
+        job.experience || "",
+      salaryMin:
+        job.salaryMin ?? "",
+      salaryMax:
+        job.salaryMax ?? "",
+      openings:
+        job.openings || 1,
 
       skills: Array.isArray(job.skills)
         ? job.skills.join(", ")
         : "",
 
-      responsibilities: Array.isArray(
-        job.responsibilities
-      )
-        ? job.responsibilities.join("\n")
-        : "",
+      responsibilities:
+        Array.isArray(
+          job.responsibilities
+        )
+          ? job.responsibilities.join(
+              "\n"
+            )
+          : "",
 
-      qualifications: Array.isArray(
-        job.qualifications
-      )
-        ? job.qualifications.join("\n")
-        : "",
+      qualifications:
+        Array.isArray(
+          job.qualifications
+        )
+          ? job.qualifications.join(
+              "\n"
+            )
+          : "",
 
-      status: job.status || "Open",
+      status:
+        job.status || "Open",
     });
 
     setShowForm(true);
@@ -252,14 +325,19 @@ function AdminDashboard() {
     const payload = {
       title: form.title.trim(),
       company: form.company.trim(),
-      description: form.description.trim(),
+      description:
+        form.description.trim(),
       location: form.location.trim(),
       jobType: form.jobType,
       category: form.category.trim(),
-      experience: form.experience.trim(),
-      salaryMin: Number(form.salaryMin) || 0,
-      salaryMax: Number(form.salaryMax) || 0,
-      openings: Number(form.openings) || 1,
+      experience:
+        form.experience.trim(),
+      salaryMin:
+        Number(form.salaryMin) || 0,
+      salaryMax:
+        Number(form.salaryMax) || 0,
+      openings:
+        Number(form.openings) || 1,
       status: form.status,
 
       skills: form.skills
@@ -267,15 +345,17 @@ function AdminDashboard() {
         .map((item) => item.trim())
         .filter(Boolean),
 
-      responsibilities: form.responsibilities
-        .split("\n")
-        .map((item) => item.trim())
-        .filter(Boolean),
+      responsibilities:
+        form.responsibilities
+          .split("\n")
+          .map((item) => item.trim())
+          .filter(Boolean),
 
-      qualifications: form.qualifications
-        .split("\n")
-        .map((item) => item.trim())
-        .filter(Boolean),
+      qualifications:
+        form.qualifications
+          .split("\n")
+          .map((item) => item.trim())
+          .filter(Boolean),
     };
 
     try {
@@ -290,17 +370,20 @@ function AdminDashboard() {
       const response = await fetch(url, {
         method,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (!response.ok) {
         alert(
-          data.message || "Unable to save job."
+          data.message ||
+            "Unable to save job."
         );
 
         return;
@@ -334,9 +417,10 @@ function AdminDashboard() {
   // ==========================================
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this job?"
-    );
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to delete this job?"
+      );
 
     if (!confirmed) {
       return;
@@ -363,7 +447,8 @@ function AdminDashboard() {
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (!response.ok) {
         alert(
@@ -374,7 +459,9 @@ function AdminDashboard() {
         return;
       }
 
-      alert("Job deleted successfully.");
+      alert(
+        "Job deleted successfully."
+      );
 
       await refreshJobs();
     } catch (error) {
@@ -393,30 +480,32 @@ function AdminDashboard() {
   // SEARCH JOBS
   // ==========================================
 
-  const filteredJobs = jobs.filter((job) => {
-    const searchText = search
-      .toLowerCase()
-      .trim();
+  const filteredJobs = jobs.filter(
+    (job) => {
+      const searchText = search
+        .toLowerCase()
+        .trim();
 
-    if (!searchText) {
-      return true;
+      if (!searchText) {
+        return true;
+      }
+
+      return (
+        job.title
+          ?.toLowerCase()
+          .includes(searchText) ||
+        job.company
+          ?.toLowerCase()
+          .includes(searchText) ||
+        job.location
+          ?.toLowerCase()
+          .includes(searchText) ||
+        job.category
+          ?.toLowerCase()
+          .includes(searchText)
+      );
     }
-
-    return (
-      job.title
-        ?.toLowerCase()
-        .includes(searchText) ||
-      job.company
-        ?.toLowerCase()
-        .includes(searchText) ||
-      job.location
-        ?.toLowerCase()
-        .includes(searchText) ||
-      job.category
-        ?.toLowerCase()
-        .includes(searchText)
-    );
-  });
+  );
 
   const openJobs = jobs.filter(
     (job) => job.status === "Open"
@@ -430,6 +519,19 @@ function AdminDashboard() {
     window.location.href =
       "/jobs/admin/applications";
   };
+
+  // ==========================================
+  // OPEN CANDIDATES PAGE
+  // ==========================================
+
+  const openCandidates = () => {
+    window.location.href =
+      "/jobs/admin/candidates";
+  };
+
+  // ==========================================
+  // RENDER
+  // ==========================================
 
   return (
     <div className="admin-page">
@@ -445,8 +547,13 @@ function AdminDashboard() {
           </div>
 
           <div>
-            <strong>Centennial</strong>
-            <span>Infotech</span>
+            <strong>
+              Centennial
+            </strong>
+
+            <span>
+              Infotech
+            </span>
           </div>
 
         </div>
@@ -466,7 +573,12 @@ function AdminDashboard() {
             Applications
           </a>
 
-          <a>
+          <a
+            onClick={openCandidates}
+            style={{
+              cursor: "pointer",
+            }}
+          >
             Candidates
           </a>
 
@@ -511,13 +623,16 @@ function AdminDashboard() {
             </p>
 
             <h1>
-              Career <span>Management</span>
+              Career{" "}
+              <span>
+                Management
+              </span>
             </h1>
 
             <p className="heading-description">
-              Manage your organization's job
-              opportunities and recruitment
-              pipeline.
+              Manage your organization's
+              job opportunities and
+              recruitment pipeline.
             </p>
 
           </div>
@@ -525,7 +640,9 @@ function AdminDashboard() {
           <button
             type="button"
             className="create-job-button"
-            onClick={openCreateForm}
+            onClick={
+              openCreateForm
+            }
           >
             <Plus size={19} />
             Create Job
@@ -549,7 +666,9 @@ function AdminDashboard() {
 
             <div>
 
-              <p>Total Jobs</p>
+              <p>
+                Total Jobs
+              </p>
 
               <strong>
                 {jobs.length}
@@ -571,7 +690,9 @@ function AdminDashboard() {
 
             <div>
 
-              <p>Open Positions</p>
+              <p>
+                Open Positions
+              </p>
 
               <strong>
                 {openJobs}
@@ -585,21 +706,23 @@ function AdminDashboard() {
 
           <div
             className="stat-card"
-            onClick={openApplications}
+            onClick={
+              openApplications
+            }
             style={{
               cursor: "pointer",
             }}
           >
 
             <div className="stat-icon purple">
-
               <Users size={22} />
-
             </div>
 
             <div>
 
-              <p>Total Applications</p>
+              <p>
+                Total Applications
+              </p>
 
               <strong>
                 {applicationCount}
@@ -611,20 +734,30 @@ function AdminDashboard() {
 
           {/* CANDIDATES */}
 
-          <div className="stat-card">
+          <div
+            className="stat-card"
+            onClick={
+              openCandidates
+            }
+            style={{
+              cursor: "pointer",
+            }}
+          >
 
             <div className="stat-icon orange">
-
-              <FileText size={22} />
-
+              <FileText
+                size={22}
+              />
             </div>
 
             <div>
 
-              <p>Candidates</p>
+              <p>
+                Candidates
+              </p>
 
               <strong>
-                0
+                {candidateCount}
               </strong>
 
             </div>
@@ -646,8 +779,8 @@ function AdminDashboard() {
               </h2>
 
               <p>
-                Manage your current job
-                postings.
+                Manage your current
+                job postings.
               </p>
 
             </div>
@@ -661,7 +794,9 @@ function AdminDashboard() {
                 placeholder="Search jobs..."
                 value={search}
                 onChange={(e) =>
-                  setSearch(e.target.value)
+                  setSearch(
+                    e.target.value
+                  )
                 }
               />
 
@@ -679,7 +814,8 @@ function AdminDashboard() {
 
             </div>
 
-          ) : filteredJobs.length === 0 ? (
+          ) : filteredJobs.length ===
+            0 ? (
 
             <div className="empty-state">
 
@@ -692,14 +828,17 @@ function AdminDashboard() {
               </h3>
 
               <p>
-                Create your first job
-                posting to start attracting
+                Create your first
+                job posting to
+                start attracting
                 candidates.
               </p>
 
               <button
                 type="button"
-                onClick={openCreateForm}
+                onClick={
+                  openCreateForm
+                }
               >
                 <Plus size={18} />
                 Create Job
@@ -891,7 +1030,9 @@ function AdminDashboard() {
 
             <form
               className="job-form"
-              onSubmit={handleSubmit}
+              onSubmit={
+                handleSubmit
+              }
             >
 
               <div className="form-grid">
@@ -906,7 +1047,9 @@ function AdminDashboard() {
                     type="text"
                     name="title"
                     value={form.title}
-                    onChange={handleChange}
+                    onChange={
+                      handleChange
+                    }
                     placeholder="e.g. HR Recruitment Specialist"
                     required
                   />
@@ -922,8 +1065,12 @@ function AdminDashboard() {
                   <input
                     type="text"
                     name="location"
-                    value={form.location}
-                    onChange={handleChange}
+                    value={
+                      form.location
+                    }
+                    onChange={
+                      handleChange
+                    }
                     placeholder="e.g. Bangalore, India"
                     required
                   />
@@ -938,8 +1085,12 @@ function AdminDashboard() {
 
                   <select
                     name="jobType"
-                    value={form.jobType}
-                    onChange={handleChange}
+                    value={
+                      form.jobType
+                    }
+                    onChange={
+                      handleChange
+                    }
                   >
 
                     <option value="Full Time">
@@ -975,8 +1126,12 @@ function AdminDashboard() {
                   <input
                     type="text"
                     name="category"
-                    value={form.category}
-                    onChange={handleChange}
+                    value={
+                      form.category
+                    }
+                    onChange={
+                      handleChange
+                    }
                     placeholder="e.g. Information Technology"
                   />
 
@@ -991,8 +1146,12 @@ function AdminDashboard() {
                   <input
                     type="text"
                     name="experience"
-                    value={form.experience}
-                    onChange={handleChange}
+                    value={
+                      form.experience
+                    }
+                    onChange={
+                      handleChange
+                    }
                     placeholder="e.g. 2 Years"
                   />
 
@@ -1007,8 +1166,12 @@ function AdminDashboard() {
                   <input
                     type="number"
                     name="salaryMin"
-                    value={form.salaryMin}
-                    onChange={handleChange}
+                    value={
+                      form.salaryMin
+                    }
+                    onChange={
+                      handleChange
+                    }
                     placeholder="0"
                     min="0"
                   />
@@ -1024,8 +1187,12 @@ function AdminDashboard() {
                   <input
                     type="number"
                     name="salaryMax"
-                    value={form.salaryMax}
-                    onChange={handleChange}
+                    value={
+                      form.salaryMax
+                    }
+                    onChange={
+                      handleChange
+                    }
                     placeholder="0"
                     min="0"
                   />
@@ -1041,8 +1208,12 @@ function AdminDashboard() {
                   <input
                     type="number"
                     name="openings"
-                    value={form.openings}
-                    onChange={handleChange}
+                    value={
+                      form.openings
+                    }
+                    onChange={
+                      handleChange
+                    }
                     min="1"
                   />
 
@@ -1056,8 +1227,12 @@ function AdminDashboard() {
 
                   <select
                     name="status"
-                    value={form.status}
-                    onChange={handleChange}
+                    value={
+                      form.status
+                    }
+                    onChange={
+                      handleChange
+                    }
                   >
 
                     <option value="Open">
@@ -1084,8 +1259,12 @@ function AdminDashboard() {
 
                   <textarea
                     name="description"
-                    value={form.description}
-                    onChange={handleChange}
+                    value={
+                      form.description
+                    }
+                    onChange={
+                      handleChange
+                    }
                     placeholder="Describe the role..."
                     rows="5"
                     required
@@ -1102,14 +1281,18 @@ function AdminDashboard() {
                   <input
                     type="text"
                     name="skills"
-                    value={form.skills}
-                    onChange={handleChange}
+                    value={
+                      form.skills
+                    }
+                    onChange={
+                      handleChange
+                    }
                     placeholder="React, Node.js, MongoDB"
                   />
 
                   <small>
-                    Separate skills with
-                    commas.
+                    Separate skills
+                    with commas.
                   </small>
 
                 </div>
@@ -1125,7 +1308,9 @@ function AdminDashboard() {
                     value={
                       form.responsibilities
                     }
-                    onChange={handleChange}
+                    onChange={
+                      handleChange
+                    }
                     placeholder="Enter one responsibility per line"
                     rows="5"
                   />
@@ -1143,7 +1328,9 @@ function AdminDashboard() {
                     value={
                       form.qualifications
                     }
-                    onChange={handleChange}
+                    onChange={
+                      handleChange
+                    }
                     placeholder="Enter one qualification per line"
                     rows="5"
                   />
